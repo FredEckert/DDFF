@@ -11,6 +11,7 @@
 #include <set>
 #include <map>
 #include <iostream>
+#include <codecvt>
 #include <locale>
 #include <fstream>
 #include <algorithm>
@@ -18,7 +19,7 @@
 
 #include <windows.h>
 
-#include <boost/utility.hpp>
+//#include <boost/utility.hpp>
 #include <boost/variant.hpp>
 #include <boost/range/adaptor/map.hpp>
 #include <boost/range/adaptors.hpp>
@@ -629,19 +630,13 @@ void add_exact_results (map<FileSize, set<Node_group>> & stage4, map<FileSize, s
         };
 };
 
-#include <boost/filesystem.hpp>
-#include <boost/serialization/serialization.hpp>
-
-#include <boost/archive/add_facet.hpp>
-#include <boost/archive/detail/utf8_codecvt_facet.hpp>
-
 void do_all(set<wstring> dirs)
 {
     const string result_filename="ddff_results.txt";
-    locale old_loc;
-    locale* utf8_locale = boost::archive::add_facet(
-            old_loc, new boost::archive::detail::utf8_codecvt_facet);
-   
+
+    const std::locale utf8_locale = std::locale(std::locale(),
+                                    new std::codecvt_utf8<wchar_t>());
+
     wstring dir_at_start=get_current_dir();
     Node* root=new Node(NULL, L"\\", L"", true);
  
@@ -683,7 +678,7 @@ void do_all(set<wstring> dirs)
     
     wofstream fout;
     fout.open (result_filename, ios::out);
-    fout.imbue(*utf8_locale);
+    fout.imbue(utf8_locale);
 
     fout << "* results:" << endl;
 

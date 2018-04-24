@@ -5,5 +5,3 @@
 * this utility could also work on archive files.
 
 * work out all FIXMEs in code
-
-* should be running for WinXP
